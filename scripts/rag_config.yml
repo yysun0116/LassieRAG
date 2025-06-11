@@ -1,0 +1,43 @@
+RAG_models:
+  LLM:
+    source: "openailike"
+    model_name: "taide-8b-rag-v3-q4"
+    base_url: "https://your.model.endpoint"
+    api_key: "$API_KEY"
+    context_window: 8192
+    is_chat_model: true
+    tokenizer_name: "taide/Llama3-TAIDE-LX-8B-Chat-Alpha1"
+    hf_token: "$HUGGINGFACE_ACCESS_TOKEN"
+  Embedding_model:
+    source: "huggingface"
+    model_name: "intfloat/multilingual-e5-large"
+    prefix_tokens: 
+      - "query: "
+      - "passage: "
+Data:
+  reader_type: "simple_dir"
+  input_dir: "/home/ubuntu/dataset/etc/source_files"
+  required_exts: 
+    - ".pdf"
+    - ".docx"
+Preprocess:
+  chunking:
+    chunk_method: "recursive"
+    chunk_size: 500
+    chunk_overlap: 100
+Indexing:
+  database_type: "opensearch"
+  host: "http://localhost:9200"
+  http_auth: 
+    - "admin"
+    - "admin"
+  search_pipeline_name: "hybrid_search"
+  timeout: 12000
+  retry_on_timeout: true
+Retriever:
+  retriever_type: "vector_index"
+  similarity_top_k: 5
+  vector_store_query_mode: "hybrid"
+Synthesizer:
+  response_mode: "multiqa"
+  streaming: false
